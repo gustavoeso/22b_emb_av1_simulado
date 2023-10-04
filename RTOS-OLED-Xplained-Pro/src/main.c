@@ -61,9 +61,9 @@ extern void xPortSysTickHandler(void);
 void but_callback(void);
 static void BUT_init(void);
 
-/************************/
+/************************************************************************/
 /* RTOS application funcs                                               */
-/************************/
+/************************************************************************/
 static void RTT_init(float freqPrescale, uint32_t IrqNPulses, uint32_t rttIRQSource);
 
 void RTT_Handler(void);
@@ -92,9 +92,9 @@ extern void vApplicationMallocFailedHook(void) {
 	configASSERT( ( volatile void * ) NULL );
 }
 
-/************************/
+/************************************************************************/
 /* handlers / callbacks                                                 */
-/************************/
+/************************************************************************/
 
 void but1_callback(void){
 	int modo = 180;
@@ -112,15 +112,13 @@ void but3_callback(void){
 	xQueueSendFromISR(xQueueModo, &modo, 0);
 }
 
-/************************/
+/************************************************************************/
 /* TASKS                                                                */
-/************************/
+/************************************************************************/
 
 static void task_modo(void *pvParameters) {
 	gfx_mono_ssd1306_init();
 	BUT_init();
-  	// gfx_mono_draw_string("Exemplo RTOS", 0, 0, &sysfont);
-  	// gfx_mono_draw_string("oii", 0, 20, &sysfont);
 	int modo;
 	int steps;
 	char modo_str[128];
@@ -170,9 +168,9 @@ static void task_motor(void *pvParameters) {
 	}
 }
 
-/************************/
+/************************************************************************/
 /* funcoes                                                              */
-/************************/
+/************************************************************************/
 void RTT_Handler(void) {
   uint32_t ul_status;
   ul_status = rtt_get_status(RTT);
@@ -259,22 +257,7 @@ static void configure_console(void) {
 	setbuf(stdout, NULL);
 }
 
-// static void BUT_init(void) {
-// 	/* configura prioridae */
-// 	NVIC_EnableIRQ(BUT_PIO_ID);
-// 	NVIC_SetPriority(BUT_PIO_ID, 4);
-
-// 	/* conf bot�o como entrada */
-// 	pio_configure(BUT_PIO, PIO_INPUT, BUT_PIO_PIN_MASK, PIO_PULLUP | PIO_DEBOUNCE);
-// 	pio_set_debounce_filter(BUT_PIO, BUT_PIO_PIN_MASK, 60);
-// 	pio_enable_interrupt(BUT_PIO, BUT_PIO_PIN_MASK);
-// 	pio_handler_set(BUT_PIO, BUT_PIO_ID, BUT_PIO_PIN_MASK, PIO_IT_FALL_EDGE , but_callback);
-// }
-
 void BUT_init(void){
-
-	// Disativa WatchDog Timer
-	// WDT->WDT_MR = WDT_MR_WDDIS;
 
 	// Inicializa clock do periférico PIO responsavel pelo botao
 	pmc_enable_periph_clk(BUT1_PIO_ID);
@@ -320,13 +303,6 @@ void BUT_init(void){
 	NVIC_EnableIRQ(BUT3_PIO_ID);
 	NVIC_SetPriority(BUT3_PIO_ID, 4);
 	
-	// pio_set_output(BUZZER_PIO, BUZZER_PIO_IDX_MASK, 0, 0, 0); // Buzzer como output
-	
-	// pio_set_input(BUT1_PIO, BUT1_PIO_IDX_MASK, PIO_DEFAULT); // BUT1 como input
-	// pio_pull_up(BUT1_PIO, BUT1_PIO_IDX_MASK, 1);
-	
-	// pio_set_input(BUT3_PIO, BUT3_PIO_IDX_MASK, 0); // BUT3 como input            // Perguntar corsi pq tem que desativar isso
-	// pio_pull_up(BUT3_PIO, BUT3_PIO_IDX_MASK, 1);
 }
 
 void PINS_init(void){
@@ -344,9 +320,9 @@ void PINS_init(void){
 }
 
 
-/************************/
+/************************************************************************/
 /* main                                                                 */
-/************************/
+/************************************************************************/
 
 
 int main(void) {
